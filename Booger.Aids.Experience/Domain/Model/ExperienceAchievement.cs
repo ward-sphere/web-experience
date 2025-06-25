@@ -9,11 +9,11 @@ namespace Domain.Model
         [Column(Order = 1)]
         [Required]
         [ForeignKey("Experience")]
+        public int ExperienceId { get; set; }
         public Experience Experience { get; set; }
 
         [Column(Order = 2)]
         [Required]
-        [ForeignKey("Achievement")]
-        public Achievement Achievement { get; set; }
+        public string Description { get; set; }
     }
 }
