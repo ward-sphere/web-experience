@@ -12,7 +12,7 @@ This project was developed using Microsoft EF Core 9 Code-First. As such, any ch
 Add-Migration <migration-name>
 ```
 
-to create your new migration. Find `Booger.Aids.Experience/Service/Migrations/<YYYY><MM><DD>*_<migration-name>.cs` and populate the `Up` and `Down` methods. Then, set the `PORTFOLIO_PGSQL_CONNECTION_STRING` value in your environment and again from the Package Manager Console run
+to create your new migration. Find `Booger.Aids.Experience/Service/Migrations/<YYYY><MM><DD>*_<migration-name>.cs` and populate the `Up` and `Down` methods. Then, set the `AIDSBOOGER__PORTFOLIO__EXPERIENCE__CONNSTR` value in your environment and again from the Package Manager Console run
 
 ```ps1
 Update-Database

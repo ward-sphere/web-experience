@@ -10,8 +10,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Configuration.AddEnvironmentVariables("AIDSBOOGER__PORTFOLIO__EXPERIENCE");
+
 builder.Services.AddDbContext<ExperienceContext>(options =>
-    options.UseNpgsql(System.Environment.GetEnvironmentVariable("PORTFOLIO_PGSQL_CONNECTION_STRING")));
+    options.UseNpgsql(builder.Configuration
+        .GetSection("AIDSBOOGER")
+        .GetSection("PORTFOLIO")
+        .GetSection("EXPERIENCE")
+        .GetSection("CONNSTR").Value));
 
 var app = builder.Build();
 
