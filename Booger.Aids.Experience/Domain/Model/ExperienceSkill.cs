@@ -7,13 +7,13 @@ namespace Domain.Model
     public class ExperienceSkill : BaseModel<Guid>
     {
 
-        [Column(Order = 1)]
+        [Column]
         [ForeignKey("Experience")]
         [Required]
         public int ExperienceId { get; set; }
         public Experience Experience { get; set; }
 
-        [Column(Order = 2)]
+        [Column]
         [ForeignKey("Skill")]
         [Required]
         public int SkillId { get; set; }

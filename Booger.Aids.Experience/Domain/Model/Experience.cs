@@ -7,28 +7,31 @@ namespace Domain.Model
     public class Experience : BaseModel<int>
     {
 
-        [Column(Order = 1)]
+        [Column]
         [Required]
         public string Title { get; set; }
 
-        [Column(Order = 2)]
+        [Column]
+        [Required]
+        public string EmploymentType { get; set; }
+
+        [Column]
         [Required]
         public string Organization { get; set; }
 
-        [Column(Order = 3)]
+        [Column]
         [Required]
         public DateOnly StartDate { get; set; }
 
-        [Column(Order = 4)]
+        [Column]
         public DateOnly? EndDate { get; set; } = null;
 
-        [Column(Order = 5)]
+        [Column]
         [Required]
         public string Location { get; set; }
 
-        [Column(Order = 6)]
+        [Column]
         [Required]
         public string Description { get; set; }
-
     }
 }
