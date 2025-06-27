@@ -1,0 +1,46 @@
+@Service_HostAddress = http://localhost:5146
+@Service_EducationBaseUrl = {{Service_HostAddress}}/experience/education
+
+POST {{Service_EducationBaseUrl}}
+Content-Type: application/json
+
+{
+  "school": "Backupsmore University",
+  "degree": "Bachelors of Science",
+  "field": "Biology",
+  "startDate": "1970-01-01",
+  "endDate": "1974-12-31",
+  "description": "Triple major in Biology Chemistry and Physics"
+}
+
+###
+
+GET {{Service_EducationBaseUrl}}
+Accept: application/json
+
+###
+
+@Education_Id = 1
+
+GET {{Service_EducationBaseUrl}}/{{Education_Id}}
+Accept: application/json
+
+###
+
+PUT {{Service_EducationBaseUrl}}/{{Education_Id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "school": "Backupsmore University",
+  "degree": "Bachelors of Engineering",
+  "field": "Mathematics",
+  "startDate": "1974-08-01",
+  "endDate": "1978-5-31",
+  "description": "Triple major in Mathematics Statistics and Computer Science"
+}
+
+###
+
+DELETE {{Service_EducationBaseUrl}}/{{Education_Id}}
+Accept: application/json
