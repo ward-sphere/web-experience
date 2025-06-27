@@ -1,8 +1,10 @@
 @Service_HostAddress = http://localhost:5146
 @Service_EducationBaseUrl = {{Service_HostAddress}}/experience/education
+@Token = insert_jwt
 
 POST {{Service_EducationBaseUrl}}
 Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
   "school": "Backupsmore University",
@@ -20,7 +22,7 @@ Accept: application/json
 
 ###
 
-@Education_Id = 1
+@Education_Id = 6
 
 GET {{Service_EducationBaseUrl}}/{{Education_Id}}
 Accept: application/json
@@ -30,6 +32,7 @@ Accept: application/json
 PUT {{Service_EducationBaseUrl}}/{{Education_Id}}
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{Token}}
 
 {
   "school": "Backupsmore University",
@@ -44,3 +47,4 @@ Accept: application/json
 
 DELETE {{Service_EducationBaseUrl}}/{{Education_Id}}
 Accept: application/json
+Authorization: Bearer {{Token}}
