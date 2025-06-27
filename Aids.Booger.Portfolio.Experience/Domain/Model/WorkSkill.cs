@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Model
 {
-    [Table("ExperienceSkill")]
-    public class ExperienceSkill : BaseModel<Guid>
+    [Table("WorkSkill")]
+    public class WorkSkill : BaseModel<Guid>
     {
 
         [Column]
-        [ForeignKey("Experience")]
+        [ForeignKey("Work")]
         [Required]
-        public int ExperienceId { get; set; }
-        public Experience Experience { get; set; }
+        public int WorkId { get; set; }
+        public Work Work { get; set; }
 
         [Column]
         [ForeignKey("Skill")]

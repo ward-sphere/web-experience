@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Model
 {
-    [Table("Experience")]
-    public class Experience : BaseModel<int>
+    [Table("Work")]
+    public class Work : BaseModel<int>
     {
 
         [Column]
