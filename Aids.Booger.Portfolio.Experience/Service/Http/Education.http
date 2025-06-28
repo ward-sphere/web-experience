@@ -1,6 +1,6 @@
 @Service_HostAddress = http://localhost:5146
 @Service_EducationBaseUrl = {{Service_HostAddress}}/experience/education
-@Token = insert_jwt
+@Token = some_faulty_token (use real token from webpage)
 
 POST {{Service_EducationBaseUrl}}
 Content-Type: application/json

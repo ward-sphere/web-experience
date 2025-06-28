@@ -14,22 +14,23 @@ builder.Services.AddSwaggerGen();
 
 builder.Configuration.AddEnvironmentVariables("AIDSBOOGER__PORTFOLIO__EXPERIENCE");
 
-builder.Services.AddDbContext<ExperienceContext>(options =>
-    options.UseNpgsql(builder.Configuration
+string? GetEnvironmentConfigurationValue(string key)
+{
+    return builder.Configuration
         .GetSection("AIDSBOOGER")
         .GetSection("PORTFOLIO")
         .GetSection("EXPERIENCE")
-        .GetSection("CONNSTR").Value));
+        .GetSection(key).Value;
+}
+
+builder.Services.AddDbContext<ExperienceContext>(options =>
+    options.UseNpgsql(GetEnvironmentConfigurationValue("CONNSTR")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
         options.Audience = builder.Configuration["Auth0:Audience"];
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidateIssuer = false
-        };
     });
 
 builder.Services.AddAuthorizationBuilder()
