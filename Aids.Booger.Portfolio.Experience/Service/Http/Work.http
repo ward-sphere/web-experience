@@ -1,0 +1,58 @@
+@Service_HostAddress = http://localhost:5146
+@Service_EducationBaseUrl = {{Service_HostAddress}}/experience/work
+@Token = some_faulty_token (use real token from webpage)
+
+POST {{Service_EducationBaseUrl}}
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "title": "Current Executive Officer",
+  "employmentType": "Full-time",
+  "organization": "Amazon Web Services",
+  "startDate": "1970-01-01",
+  "location": {
+    "City": "Seattle",
+    "State": "WA",
+    "Country": "USA"
+  },
+  "description": "I founded Amazon, super duper true. Fact checkers agree"
+}
+
+###
+
+GET {{Service_EducationBaseUrl}}
+Accept: application/json
+
+###
+
+@Work_Id = 0
+
+GET {{Service_EducationBaseUrl}}/{{Work_Id}}
+Accept: application/json
+
+###
+
+PUT {{Service_EducationBaseUrl}}/{{Work_Id}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "title": "Garbage Dumpster Diver",
+  "employmentType": "Internship",
+  "organization": "Amazon",
+  "startDate": "2020-01-01",
+  "location": {
+    "City": "Toronto",
+    "State": "ON",
+    "Country": "CAN"
+  },
+  "description": "I lied, sorry. I actually just steal old computers from their dumpsters :("
+}
+
+###
+
+DELETE {{Service_EducationBaseUrl}}/{{Work_Id}}
+Accept: application/json
+Authorization: Bearer {{Token}}

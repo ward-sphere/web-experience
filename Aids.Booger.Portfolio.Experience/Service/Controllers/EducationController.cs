@@ -99,6 +99,7 @@ namespace Service.Controllers
             }
 
             await _context.Educations.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
