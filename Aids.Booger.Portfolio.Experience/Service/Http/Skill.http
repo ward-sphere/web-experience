@@ -1,0 +1,23 @@
+@Service_HostAddress = http://localhost:5146
+@Service_SkillBaseUrl = {{Service_HostAddress}}/experience/skill
+@Token = faultyToken (replace with real one from site)
+
+POST {{Service_SkillBaseUrl}}
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "name": "Java"
+}
+
+###
+
+GET {{Service_SkillBaseUrl}}
+Accept: application/json
+
+###
+
+@Skill_Id = 1
+
+GET {{Service_SkillBaseUrl}}/{{Skill_Id}}
+Accept: application/json
