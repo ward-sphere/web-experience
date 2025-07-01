@@ -22,10 +22,6 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{Token}}
 
-{
-  "description": "resume bullet 1.1"
-}
-
 ###
 
 DELETE {{Service_HostAddress}}/work/skill/{{WorkSkillId}}

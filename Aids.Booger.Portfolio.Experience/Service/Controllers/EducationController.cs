@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Dto.Education;
 using Service.Infrastructure;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 
 namespace Service.Controllers
 {
@@ -13,6 +14,16 @@ namespace Service.Controllers
     {
 
         private readonly ExperienceContext _context = ctx;
+
+        private async Task ValidateEducation(int id)
+        {
+            if (await _context.Education.AnyAsync(dbo => dbo.Id == id)) return;
+
+            throw new ValidationFailedException()
+            {
+                Result = NotFound($"No such Education with ID {id}")
+            };
+        }
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("/experience/education")]
@@ -27,19 +38,15 @@ namespace Service.Controllers
                 EndDate = dto.EndDate != null ? DateOnly.Parse(dto.EndDate) : null,
                 Description = dto.Description
             };
-            _context.Education.Add(dbo);
+            await _context.Education.AddAsync(dbo);
             await _context.SaveChangesAsync();
 
             return Ok();
         }
 
-        [HttpGet("/experience/education/{id}")]
-        public async Task<IActionResult> ReadEducationById(int id)
+        private EducationRead Convert(Education dbo)
         {
-            Education? dbo = (await _context.Education.ToListAsync()).Find(dbo => dbo.Id == id);
-            if (dbo == null) return NotFound($"No such education with ID {id}");
-
-            EducationRead res = new()
+            return new()
             {
                 Id = dbo.Id,
                 School = dbo.School,
@@ -49,35 +56,31 @@ namespace Service.Controllers
                 EndDate = dbo.EndDate,
                 Description = dbo.Description
             };
-            return Ok(res);
+        }
+
+        [HttpGet("/experience/education/{id}")]
+        public async Task<IActionResult> ReadEducationById(int id)
+        {
+            await ValidateEducation(id);
+
+            Education dbo = await _context.Education.FirstAsync(dbo => dbo.Id == id);
+            return Ok(Convert(dbo));
         }
 
         [HttpGet("/experience/education")]
         public async Task<IActionResult> ReadAllEducation()
         {
             List<Education> dbo = await _context.Education.ToListAsync();
-
-            IEnumerable<EducationRead> res = dbo.ConvertAll(dbo => new EducationRead()
-                { 
-                    Id = dbo.Id,
-                    School = dbo.School,
-                    Degree = dbo.Degree,
-                    Field = dbo.Field,
-                    StartDate = dbo.StartDate,
-                    EndDate = dbo.EndDate,
-                    Description = dbo.Description
-                }
-            );
-            return Ok(res);
+            return Ok(dbo.ConvertAll(Convert));
         }
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPut("/experience/education/{id}")]
         public async Task<IActionResult> UpdateEducation(int id, [FromBody] EducationWrite dto)
         {
-            Education? dbo = (await _context.Education.ToListAsync()).Find(dbo => dbo.Id == id);
-            if (dbo == null) return NotFound($"No such education with ID {id}");
+            await ValidateEducation(id);
 
+            Education dbo = await _context.Education.FirstAsync(dbo => dbo.Id == id);
             dbo.School = dto.School;
             dbo.Degree = dto.Degree;
             dbo.Field = dto.Field;
@@ -93,7 +96,7 @@ namespace Service.Controllers
         [HttpDelete("/experience/education/{id}")]
         public async Task<IActionResult> DeleteEducation(int id)
         {
-            if (!_context.Education.Any(dbo => dbo.Id == id)) return NotFound($"No such education with ID {id}");
+            await ValidateEducation(id);
 
             await _context.Education.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();

@@ -26,7 +26,7 @@ Accept: application/json
 
 ###
 
-@Work_Id = 6
+@Work_Id = 0
 
 GET {{Service_WorkBaseUrl}}/{{Work_Id}}
 Accept: application/json

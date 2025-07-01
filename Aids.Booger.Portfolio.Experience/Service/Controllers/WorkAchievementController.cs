@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.Dto.Work;
 using Service.Dto.WorkAchievement;
 using Service.Infrastructure;
+using System.Runtime.InteropServices;
 
 namespace Service.Controllers
 {
@@ -12,6 +13,26 @@ namespace Service.Controllers
     public class WorkAchievementController(ExperienceContext context) : Controller
     {
         private readonly ExperienceContext _ctx = context;
+
+        private async Task ValidateWork(int id)
+        {
+            if (await _ctx.Work.AnyAsync(dbo => dbo.Id == id)) return;
+
+            throw new ValidationFailedException()
+            {
+                Result = NotFound($"No such Work with ID {id}")
+            };
+        }
+
+        private async Task ValidateWorkAchievement(Guid id)
+        {
+            if (await _ctx.WorkAchievement.AnyAsync(dbo => dbo.Id == id)) return;
+
+            throw new ValidationFailedException()
+            {
+                Result = NotFound($"No such Work with ID {id}")
+            };
+        }
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("/experience/work/{id}/achievement")]
@@ -42,7 +63,8 @@ namespace Service.Controllers
         [HttpGet("/experience/work/achievement/{id}")]
         public async Task<IActionResult> GetWorkAchievementById(Guid id)
         {
-            if (!_ctx.WorkAchievement.Any(dbo => dbo.Id == id)) return NotFound($"No such WorkAchievement with ID {id}");
+            try { await ValidateWorkAchievement(id); }
+            catch (ValidationFailedException e) { return e.Result; }
             
             WorkAchievement dbo = await _ctx.WorkAchievement.FirstAsync(dbo => dbo.Id == id);
             return Ok(Convert(dbo));
@@ -51,7 +73,8 @@ namespace Service.Controllers
         [HttpGet("/experience/work/{id}/achievement")]
         public async Task<IActionResult> GetWorkAchievementsByWorkId(int id)
         {
-            if (!_ctx.Work.Any(dbo => dbo.Id == id)) return NotFound($"No such Work with ID {id}");
+            try { await ValidateWork(id); }
+            catch (ValidationFailedException e) { return e.Result; }
             
             List<WorkAchievement> dbo = await _ctx.WorkAchievement.Where(dbo => dbo.WorkId == id).ToListAsync();
             return Ok(dbo.ConvertAll(Convert));
@@ -61,8 +84,9 @@ namespace Service.Controllers
         [HttpPut("/experience/work/achievement/{id}")]
         public async Task<IActionResult> UpdateWorkAchievement(Guid id, [FromBody] WorkAchievementUpdate dto)
         {
-            if (!_ctx.WorkAchievement.Any(dbo => dbo.Id == id)) return NotFound($"No such WorkAchievement with ID {id}");
-            
+            try { await ValidateWorkAchievement(id); }
+            catch (ValidationFailedException e) { return e.Result; }
+
             WorkAchievement dbo = await _ctx.WorkAchievement.FirstAsync(dbo => dbo.Id == id);
             dbo.Description = dto.Description;
 
@@ -75,7 +99,8 @@ namespace Service.Controllers
         [HttpDelete("/experience/work/achievement/{id}")]
         public async Task<IActionResult> DeleteWorkAchievement(Guid id)
         {
-            if (!_ctx.WorkAchievement.Any(dbo => dbo.Id == id)) return NotFound($"No such WorkAchievement with ID {id}");
+            try { await ValidateWorkAchievement(id); }
+            catch (ValidationFailedException e) { return e.Result; }
 
             await _ctx.WorkAchievement.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _ctx.SaveChangesAsync();

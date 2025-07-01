@@ -18,37 +18,56 @@ namespace Service.Controllers
         private static readonly int REQUIRED_COUNTRY_LENGTH = 3,
             REQUIRED_STATE_LENGTH = 2;
 
-        private static void ValidateEmploymentType(string employmentType)
+        private void ValidateEmploymentType(string employmentType)
         {
             if (ALLOWED_EMPLOYMENT_TYPE_INPUT.Contains(employmentType)) return;
 
             string errorMessage = $"Invalid employment type {employmentType}. " +
                     $"Must match one of: {String.Join(", ", ALLOWED_EMPLOYMENT_TYPE_INPUT)}";
-            throw new ValidationFailedException(new BadRequestObjectResult(errorMessage));
+            throw new ValidationFailedException()
+            {
+                Result = BadRequest(errorMessage)
+            };
         }
 
-        private static void ValidateCountry(string country)
+        private void ValidateCountry(string country)
         {
             if (country.Length == REQUIRED_COUNTRY_LENGTH) return;
 
             string errorMessage = $"Invalid country code {country}. "
                     + $"Must have length {REQUIRED_COUNTRY_LENGTH}";
-            throw new ValidationFailedException(new BadRequestObjectResult(errorMessage));
+            throw new ValidationFailedException()
+            {
+                Result = BadRequest(errorMessage)
+            };
         }
 
-        private static void ValidateState(string state)
+        private void ValidateState(string state)
         {
             if (state.Length == REQUIRED_STATE_LENGTH) return;
 
             string errorMessage = $"Invalid state {state}. "
                     + $"Must have length {REQUIRED_STATE_LENGTH}";
-            throw new ValidationFailedException(new BadRequestObjectResult(errorMessage));
+            throw new ValidationFailedException()
+            {
+                Result = BadRequest(errorMessage)
+            };
         }
 
-        private static void ValidateLocation(Location loc)
+        private void ValidateLocation(Location loc)
         {
             ValidateCountry(loc.Country);
             ValidateState(loc.State);
+        }
+
+        private async Task ValidateWork(int id)
+        {
+            if (await _context.Work.AnyAsync(dbo => dbo.Id == id)) return;
+
+            throw new ValidationFailedException()
+            {
+                Result = NotFound($"No such Work with ID {id}")
+            };
         }
 
         [Authorize(Policy = "AdminOnly")]
@@ -106,34 +125,20 @@ namespace Service.Controllers
             };
         }
 
-        private async Task<Work> FindDboById(int id)
-        {
-            Work? dbo = (await _context.Work.ToListAsync()).Find(x => x.Id == id)
-                ?? throw new ValidationFailedException(
-                    NotFound($"No such work with ID {id}")
-                );
-            return dbo;
-        }
-
         [HttpGet("/experience/work/{id}")]
         public async Task<IActionResult> ReadWorkById(int id) {
-            try
-            {
-                WorkRead res = Convert(await FindDboById(id));
-                return Ok(res);
-            }
-            catch (ValidationFailedException e)
-            {
-                return e.Result;
-            }
+            try { await ValidateWork(id); }
+            catch (ValidationFailedException e) { return e.Result; }
+
+            Work dbo = await _context.Work.FirstAsync(dbo => dbo.Id == id);
+            return Ok(Convert(dbo));
         }
 
         [HttpGet("/experience/work")]
         public async Task<IActionResult> ReadWork()
         {
             List<Work> dbo = await _context.Work.ToListAsync();
-            IEnumerable<WorkRead> res = dbo.ConvertAll(Convert);
-            return Ok(res);
+            return Ok(dbo.ConvertAll(Convert));
         }
 
         [Authorize(Policy = "AdminOnly")]
@@ -142,6 +147,7 @@ namespace Service.Controllers
         {
             try
             {
+                await ValidateWork(id);
                 ValidateEmploymentType(dto.EmploymentType);
                 ValidateLocation(dto.Location);
             }
@@ -150,7 +156,7 @@ namespace Service.Controllers
                 return e.Result;
             }
 
-            Work dbo = await FindDboById(id);
+            Work dbo = await _context.Work.FirstAsync(dbo => dbo.Id == id);
             
             dbo.Title = dto.Title;
             dbo.EmploymentType = dto.EmploymentType;
@@ -171,7 +177,7 @@ namespace Service.Controllers
         [HttpDelete("/experience/work/{id}")]
         public async Task<IActionResult> DeleteWork(int id)
         {
-            try { await FindDboById(id); }
+            try { await ValidateWork(id); }
             catch (ValidationFailedException e) { return e.Result; }
 
             await _context.WorkAchievement.Where(dbo => dbo.WorkId == id).ExecuteDeleteAsync();
@@ -180,11 +186,6 @@ namespace Service.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
-        }
-
-        private class ValidationFailedException(IActionResult res) : Exception
-        {
-            public IActionResult Result { get; set; } = res;
         }
     }
 }

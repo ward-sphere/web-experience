@@ -17,7 +17,7 @@ Accept: application/json
 
 ###
 
-@Skill_Id = 15
+@Skill_Id = 0
 
 GET {{Service_SkillBaseUrl}}/{{Skill_Id}}
 Accept: application/json

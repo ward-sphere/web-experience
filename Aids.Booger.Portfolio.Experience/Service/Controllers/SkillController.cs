@@ -33,7 +33,7 @@ namespace Service.Controllers
         [HttpGet("/experience/skill/{id}")]
         public async Task<IActionResult> ReadSkillById(int id)
         {
-            if (!_ctx.Skill.Any(dbo => dbo.Id == id)) return NotFound($"No such skill with ID {id}");
+            if (!await _ctx.Skill.AnyAsync(dbo => dbo.Id == id)) return NotFound($"No such skill with ID {id}");
 
             Skill dbo = await _ctx.Skill.FirstAsync(dbo => dbo.Id == id);
             SkillRead res = new()

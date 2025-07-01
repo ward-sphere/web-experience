@@ -134,7 +134,5 @@ namespace Service.Controllers
 
             return Ok();
         }
-
-        private class ValidationFailedException : Exception { public IActionResult Result { get; set; } }
     }
 }

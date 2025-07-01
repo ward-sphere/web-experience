@@ -1,7 +1,7 @@
 @Service_HostAddress = http://localhost:5146/experience
-@Token = faultyToken (replace with real one from site)
+@Token = some_faulty_token (use real token from webpage)
 
-@WorkId = 5
+@WorkId = 0
 
 POST {{Service_HostAddress}}/work/{{WorkId}}/achievement
 Content-Type: application/json
