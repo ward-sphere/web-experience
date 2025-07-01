@@ -26,14 +26,14 @@ namespace Service.Controllers
                 EndDate = dto.EndDate != null ? DateOnly.Parse(dto.EndDate) : null,
                 Description = dto.Description
             };
-            _context.Educations.Add(dbo);
+            _context.Education.Add(dbo);
             await _context.SaveChangesAsync();
         }
 
         [HttpGet("/experience/education/{id}")]
         public async Task<EducationRead> ReadEducationById(int id)
         {
-            Education? dbo = (await _context.Educations.ToListAsync()).Find(dbo => dbo.Id == id) 
+            Education? dbo = (await _context.Education.ToListAsync()).Find(dbo => dbo.Id == id) 
                 ?? throw new HttpRequestException(message: $"No such education with ID {id}",
                     inner: null,
                     statusCode: System.Net.HttpStatusCode.NotFound);
@@ -53,7 +53,7 @@ namespace Service.Controllers
         [HttpGet("/experience/education")]
         public async Task<IEnumerable<EducationRead>> ReadAllEducation()
         {
-            List<Education> dbo = await _context.Educations.ToListAsync();
+            List<Education> dbo = await _context.Education.ToListAsync();
 
             return dbo.ConvertAll(dbo => new EducationRead()
                 { 
@@ -72,7 +72,7 @@ namespace Service.Controllers
         [HttpPut("/experience/education/{id}")]
         public async Task UpdateEducation(int id, [FromBody] EducationWrite dto)
         {
-            Education? dbo = (await _context.Educations.ToListAsync()).Find(dbo => dbo.Id == id)
+            Education? dbo = (await _context.Education.ToListAsync()).Find(dbo => dbo.Id == id)
                 ?? throw new HttpRequestException(message: $"No such education with ID {id}",
                     inner: null,
                     statusCode: System.Net.HttpStatusCode.NotFound);
@@ -91,14 +91,14 @@ namespace Service.Controllers
         [HttpDelete("/experience/education/{id}")]
         public async Task DeleteEducation(int id)
         {
-            if (!_context.Educations.Any(dbo => dbo.Id == id))
+            if (!_context.Education.Any(dbo => dbo.Id == id))
             {
                 throw new HttpRequestException(message: $"No such education with ID {id}",
                     inner: null,
                     statusCode: System.Net.HttpStatusCode.NotFound);
             }
 
-            await _context.Educations.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
+            await _context.Education.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
         }
     }

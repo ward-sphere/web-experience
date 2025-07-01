@@ -80,7 +80,7 @@ namespace Service.Controllers
                 Description = dto.Description
             };
 
-            await _context.Experiences.AddAsync(dbo);
+            await _context.Work.AddAsync(dbo);
             await _context.SaveChangesAsync();
         }
 
@@ -107,7 +107,7 @@ namespace Service.Controllers
 
         private async Task<Work> FindDboById(int id)
         {
-            Work? dbo = (await _context.Experiences.ToListAsync()).Find(x => x.Id == id)
+            Work? dbo = (await _context.Work.ToListAsync()).Find(x => x.Id == id)
                 ?? throw new HttpRequestException(
                     message: $"No such work with ID {id}",
                     inner: null,
@@ -122,7 +122,7 @@ namespace Service.Controllers
         [HttpGet("/experience/work")]
         public async Task<IEnumerable<WorkRead>> ReadWork()
         {
-            List<Work> dbo = await _context.Experiences.ToListAsync();
+            List<Work> dbo = await _context.Work.ToListAsync();
             return dbo.ConvertAll(DboToReadDto);
         }
 
@@ -153,7 +153,7 @@ namespace Service.Controllers
         public async Task DeleteWork(int id)
         {
             await FindDboById(id);
-            await _context.Experiences.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
+            await _context.Work.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
         }
     }
