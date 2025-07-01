@@ -7,7 +7,7 @@ Content-Type: application/json
 Authorization: Bearer {{Token}}
 
 {
-  "name": "Java"
+  "name": "C++"
 }
 
 ###
@@ -17,7 +17,7 @@ Accept: application/json
 
 ###
 
-@Skill_Id = 1
+@Skill_Id = 15
 
 GET {{Service_SkillBaseUrl}}/{{Skill_Id}}
 Accept: application/json

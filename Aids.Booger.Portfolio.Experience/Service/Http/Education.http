@@ -22,7 +22,7 @@ Accept: application/json
 
 ###
 
-@Education_Id = 6
+@Education_Id = 0
 
 GET {{Service_EducationBaseUrl}}/{{Education_Id}}
 Accept: application/json
@@ -35,8 +35,8 @@ Accept: application/json
 Authorization: Bearer {{Token}}
 
 {
-  "school": "Backupsmore University",
-  "degree": "Bachelors of Engineering",
+  "school": "Harvard University",
+  "degree": "Masters of Engineering",
   "field": "Mathematics",
   "startDate": "1974-08-01",
   "endDate": "1978-5-31",

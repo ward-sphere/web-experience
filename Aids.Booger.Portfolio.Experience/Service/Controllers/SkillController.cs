@@ -14,7 +14,7 @@ namespace Service.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("/experience/skill")]
-        public async Task CreateSkill([FromBody] SkillWrite dto)
+        public async Task<IActionResult> CreateSkill([FromBody] SkillWrite dto)
         {
             Skill dbo = new()
             {
@@ -23,32 +23,28 @@ namespace Service.Controllers
 
             await _ctx.Skill.AddAsync(dbo);
             await _ctx.SaveChangesAsync();
+
+            return Ok();
         }
 
         [HttpGet("/experience/skill/{id}")]
-        public async Task<SkillRead> ReadSkillById(int id)
+        public async Task<IActionResult> ReadSkillById(int id)
         {
-            if (!_ctx.Skill.Any(dbo => dbo.Id == id))
-            {
-                throw new HttpRequestException(
-                    message: $"No such skill with ID {id}",
-                    inner: null,
-                    statusCode: System.Net.HttpStatusCode.NotFound
-                );
-            }
+            if (!_ctx.Skill.Any(dbo => dbo.Id == id)) return NotFound($"No such skill with ID {id}");
 
             Skill dbo = await _ctx.Skill.FirstAsync(dbo => dbo.Id == id);
-            return new SkillRead()
+            SkillRead res = new()
             {
                 Id = dbo.Id,
                 Name = dbo.Name
             };
+            return Ok(res);
         }
 
         [HttpGet("/experience/skill")]
-        public async Task<IEnumerable<SkillRead>> ReadSkills()
+        public async Task<IActionResult> ReadSkills()
         {
-            return (await _ctx.Skill.ToListAsync())
+            IEnumerable<SkillRead> res = (await _ctx.Skill.ToListAsync())
                 .ConvertAll(
                     dbo => new SkillRead()
                     {
@@ -56,6 +52,7 @@ namespace Service.Controllers
                         Name = dbo.Name
                     }
                 );
+            return Ok(res);
         }
     }
 }

@@ -8,36 +8,36 @@ namespace Service.Model
 
         private readonly ExperienceContext _context = ctx;
 
-        private void CheckDatabaseConnection()
+        private async Task CheckDatabaseConnection()
         {
-            if (_context.Database.CanConnect()) return;
+            if (await _context.Database.CanConnectAsync()) return;
 
             string errorMessage = "Could not connect to database - check the"
                 + " AIDSBOOGER__PORTFOLIO__EXPERIENCE__CONNSTR environment"
                 + " variable and that database running";
 
-            throw new CheckFailedException(Results.Problem(errorMessage));
+            throw new CheckFailedException(BadRequest(errorMessage));
         }
 
         [HttpGet("/")]
         [HttpGet("/health")]
-        public IResult CheckHealth()
+        public async Task<IActionResult> CheckHealth()
         {
             try
             {
-                CheckDatabaseConnection();
+                await CheckDatabaseConnection();
             }
             catch (CheckFailedException e)
             {
                 return e.Result;
             }
 
-            return Results.Ok();
+            return Ok();
         }
 
-        private class CheckFailedException(IResult result) : Exception
+        private class CheckFailedException(IActionResult result) : Exception
         {
-            public IResult Result { get; set; } = result;
+            public IActionResult Result { get; set; } = result;
 
         }
     }
