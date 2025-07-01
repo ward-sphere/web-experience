@@ -1,0 +1,42 @@
+@Service_HostAddress = http://localhost:5146/experience
+@Token = faultyToken (replace with real one from site)
+
+@WorkId = 5
+
+POST {{Service_HostAddress}}/work/{{WorkId}}/achievement
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "workId": {{WorkId}},
+  "description": "resume bullet 2"
+}
+
+###
+
+GET {{Service_HostAddress}}/work/{{WorkId}}/achievement
+Accept: application/json
+
+###
+
+@WorkAchievementId = 0197c6e3-bce5-7fb0-99d6-b46456fe00cf
+
+GET {{Service_HostAddress}}/work/achievement/{{WorkAchievementId}}
+Accept: application/json
+
+###
+
+PUT {{Service_HostAddress}}/work/achievement/{{WorkAchievementId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "description": "resume bullet 1.1"
+}
+
+###
+
+DELETE {{Service_HostAddress}}/work/achievement/{{WorkAchievementId}}
+Accept: application/json
+Authorization: Bearer {{Token}}

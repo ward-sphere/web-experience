@@ -1,6 +1,5 @@
 ﻿using Domain.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Dto.Work;
@@ -86,7 +85,7 @@ namespace Service.Controllers
             return Ok();
         }
 
-        private static WorkRead DboToReadDto(Work dbo)
+        private static WorkRead Convert(Work dbo)
         {
             string[] locations = dbo.Location.Split(", ");
             return new WorkRead()
@@ -120,7 +119,7 @@ namespace Service.Controllers
         public async Task<IActionResult> ReadWorkById(int id) {
             try
             {
-                WorkRead res = DboToReadDto(await FindDboById(id));
+                WorkRead res = Convert(await FindDboById(id));
                 return Ok(res);
             }
             catch (ValidationFailedException e)
@@ -133,7 +132,7 @@ namespace Service.Controllers
         public async Task<IActionResult> ReadWork()
         {
             List<Work> dbo = await _context.Work.ToListAsync();
-            IEnumerable<WorkRead> res = dbo.ConvertAll(DboToReadDto);
+            IEnumerable<WorkRead> res = dbo.ConvertAll(Convert);
             return Ok(res);
         }
 
@@ -175,6 +174,7 @@ namespace Service.Controllers
             try { await FindDboById(id); }
             catch (ValidationFailedException e) { return e.Result; }
 
+            await _context.WorkAchievement.Where(dbo => dbo.WorkId == id).ExecuteDeleteAsync();
             await _context.Work.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
 

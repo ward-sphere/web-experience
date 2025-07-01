@@ -1,8 +1,8 @@
 @Service_HostAddress = http://localhost:5146
-@Service_EducationBaseUrl = {{Service_HostAddress}}/experience/work
-@Token = some_faulty_token (use real token from webpage)
+@Service_WorkBaseUrl = {{Service_HostAddress}}/experience/work
+@Token = faultyToken (replace with real one from site)
 
-POST {{Service_EducationBaseUrl}}
+POST {{Service_WorkBaseUrl}}
 Content-Type: application/json
 Authorization: Bearer {{Token}}
 
@@ -21,19 +21,19 @@ Authorization: Bearer {{Token}}
 
 ###
 
-GET {{Service_EducationBaseUrl}}
+GET {{Service_WorkBaseUrl}}
 Accept: application/json
 
 ###
 
 @Work_Id = 0
 
-GET {{Service_EducationBaseUrl}}/{{Work_Id}}
+GET {{Service_WorkBaseUrl}}/{{Work_Id}}
 Accept: application/json
 
 ###
 
-PUT {{Service_EducationBaseUrl}}/{{Work_Id}}
+PUT {{Service_WorkBaseUrl}}/{{Work_Id}}
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{Token}}
@@ -53,6 +53,6 @@ Authorization: Bearer {{Token}}
 
 ###
 
-DELETE {{Service_EducationBaseUrl}}/{{Work_Id}}
+DELETE {{Service_WorkBaseUrl}}/{{Work_Id}}
 Accept: application/json
 Authorization: Bearer {{Token}}
