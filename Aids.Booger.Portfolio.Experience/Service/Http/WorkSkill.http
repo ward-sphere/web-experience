@@ -1,0 +1,33 @@
+@Service_HostAddress = http://localhost:5146/experience
+@Token = some_faulty_token (use real token from webpage)
+
+@SkillId = 0
+@WorkId = 0
+
+POST {{Service_HostAddress}}/work/{{WorkId}}/skill/{{SkillId}}
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+GET {{Service_HostAddress}}/work/{{WorkId}}/skill
+Accept: application/json
+
+###
+
+@WorkSkillId = 0197c706-ce82-7d56-91b9-44dcbbbb8679
+
+DELETE {{Service_HostAddress}}/work/{{WorkId}}/skill/{{SkillId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "description": "resume bullet 1.1"
+}
+
+###
+
+DELETE {{Service_HostAddress}}/work/skill/{{WorkSkillId}}
+Accept: application/json
+Authorization: Bearer {{Token}}

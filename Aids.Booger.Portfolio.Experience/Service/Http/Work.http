@@ -1,6 +1,6 @@
 @Service_HostAddress = http://localhost:5146
 @Service_WorkBaseUrl = {{Service_HostAddress}}/experience/work
-@Token = faultyToken (replace with real one from site)
+@Token = some_faulty_token (use real token from webpage)
 
 POST {{Service_WorkBaseUrl}}
 Content-Type: application/json
@@ -26,7 +26,7 @@ Accept: application/json
 
 ###
 
-@Work_Id = 0
+@Work_Id = 6
 
 GET {{Service_WorkBaseUrl}}/{{Work_Id}}
 Accept: application/json

@@ -1,6 +1,6 @@
 @Service_HostAddress = http://localhost:5146
 @Service_SkillBaseUrl = {{Service_HostAddress}}/experience/skill
-@Token = faultyToken (replace with real one from site)
+@Token = some_faulty_token (use real token from webpage)
 
 POST {{Service_SkillBaseUrl}}
 Content-Type: application/json

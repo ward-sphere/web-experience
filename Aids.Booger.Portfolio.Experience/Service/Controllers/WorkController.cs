@@ -175,6 +175,7 @@ namespace Service.Controllers
             catch (ValidationFailedException e) { return e.Result; }
 
             await _context.WorkAchievement.Where(dbo => dbo.WorkId == id).ExecuteDeleteAsync();
+            await _context.WorkSkill.Where(dbo => dbo.WorkId == id).ExecuteDeleteAsync();
             await _context.Work.Where(dbo => dbo.Id == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
 

@@ -10,5 +10,16 @@ namespace Service.Infrastructure
         public DbSet<WorkAchievement> WorkAchievement { get; set; }
         public DbSet<WorkSkill> WorkSkill { get; set; }
         public DbSet<Skill> Skill { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Skill>()
+                .HasIndex(dbo => dbo.Name)
+                .IsUnique(true);
+
+            modelBuilder.Entity<WorkSkill>()
+                .HasIndex(dbo => new { dbo.WorkId, dbo.SkillId })
+                .IsUnique(true);
+        }
     }
 }

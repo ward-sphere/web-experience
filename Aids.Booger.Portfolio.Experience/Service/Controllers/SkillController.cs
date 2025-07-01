@@ -16,6 +16,9 @@ namespace Service.Controllers
         [HttpPost("/experience/skill")]
         public async Task<IActionResult> CreateSkill([FromBody] SkillWrite dto)
         {
+            if (await _ctx.Skill.AnyAsync(dbo => dbo.Name == dto.Name))
+                return Conflict($"Already exists Skill with name {dto.Name}");
+
             Skill dbo = new()
             {
                 Name = dto.Name
