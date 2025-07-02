@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Service.Dto.Work;
 using Service.Dto.WorkAchievement;
 using Service.Infrastructure;
-using System.Runtime.InteropServices;
 
 namespace Service.Controllers
 {
@@ -35,12 +33,15 @@ namespace Service.Controllers
         }
 
         [Authorize(Policy = "AdminOnly")]
-        [HttpPost("/experience/work/{id}/achievement")]
-        public async Task<IActionResult> CreateWorkAchievement([FromBody] WorkAchievementCreate dto)
+        [HttpPost("/experience/work/{workId}/achievement")]
+        public async Task<IActionResult> CreateWorkAchievement(int workId, [FromBody] WorkAchievementCreate dto)
         {
+            try { await ValidateWork(workId); }
+            catch (ValidationFailedException e) { return e.Result; }
+
             WorkAchievement dbo = new()
             {
-                WorkId = dto.WorkId,
+                WorkId = workId,
                 Description = dto.Description
             };
 
