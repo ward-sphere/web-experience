@@ -1,5 +1,6 @@
 ﻿using Domain.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Dto.Work;
@@ -8,6 +9,7 @@ using Service.Infrastructure;
 namespace Service.Controllers
 {
     [ApiController]
+    [EnableCors(PolicyName = "_allowFrontendOrigin")]
     public class WorkController([FromServices] ExperienceContext ctx) : Controller
     {
         private readonly ExperienceContext _context = ctx;

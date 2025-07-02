@@ -36,11 +36,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("AdminOnly", policy => policy.RequireClaim("http://hicksm.dev/roles", "Admin User"));
 
+const string corsPolicyName = "_allowFrontendOrigin";
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: corsPolicyName,
+        policy => {
+            policy.WithOrigins(
+                "http://localhost:3000",
+                "https://www.portfolio.dev.aidsbooger.com",
+                "https://portfolio.dev.aidsbooger.com",
+                "https://hicksm.dev",
+                "https://www.hicksm.dev"
+            );
+        });
+});
+
 var app = builder.Build();
 
 //app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

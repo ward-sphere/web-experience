@@ -1,5 +1,6 @@
 ﻿using Domain.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Dto.Education;
@@ -10,6 +11,7 @@ using System.Runtime.CompilerServices;
 namespace Service.Controllers
 {
     [ApiController]
+    [EnableCors(PolicyName = "_allowFrontendOrigin")]
     public class EducationController([FromServices] ExperienceContext ctx) : Controller
     {
 
