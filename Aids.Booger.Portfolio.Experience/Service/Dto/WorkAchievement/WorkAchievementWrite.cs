@@ -2,9 +2,8 @@
 
 namespace Service.Dto.WorkAchievement
 {
-    public class WorkAchievementUpdate
+    public class WorkAchievementWrite
     {
-        [MaxLength(325)]
         public string Description { get; set; }
     }
 }

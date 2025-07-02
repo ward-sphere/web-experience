@@ -34,7 +34,7 @@ namespace Service.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("/experience/work/{workId}/achievement")]
-        public async Task<IActionResult> CreateWorkAchievement(int workId, [FromBody] WorkAchievementCreate dto)
+        public async Task<IActionResult> CreateWorkAchievement(int workId, [FromBody] WorkAchievementWrite dto)
         {
             try { await ValidateWork(workId); }
             catch (ValidationFailedException e) { return e.Result; }
@@ -83,7 +83,7 @@ namespace Service.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPut("/experience/work/achievement/{id}")]
-        public async Task<IActionResult> UpdateWorkAchievement(Guid id, [FromBody] WorkAchievementUpdate dto)
+        public async Task<IActionResult> UpdateWorkAchievement(Guid id, [FromBody] WorkAchievementWrite dto)
         {
             try { await ValidateWorkAchievement(id); }
             catch (ValidationFailedException e) { return e.Result; }
